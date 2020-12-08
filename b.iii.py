@@ -15,7 +15,7 @@ features_dir='hw5/features'
 processed_dir='hw5/processed'
 gabor_feature_dir=features_dir+'/'+'gabor' 
 prewitt_feature_dir=features_dir+'/'+'prewitt'
-gray_pexel_feature_dir=features_dir+'/'+'gray'
+gray_pixel_feature_dir=features_dir+'/'+'gray'
 hog_feature_dir=features_dir+'/'+'hog'
 dic={}
 categ_feat={}
@@ -42,9 +42,9 @@ with open('/content/drive/MyDrive/Homework5/train.csv') as csvfile:
         categ_feat[samp[0]]=(samp[1],age,loc)
 files=list(dic.keys())
 files.sort()
-
+#load xrv probability vectors
 xrv_features_x=np.load('/content/drive/My Drive/xrv_feature.npy')
-
+#load gender feature
 gender_features_x=np.zeros((len(dic),2))
 y=np.zeros((len(dic)))
 i=0
@@ -55,7 +55,7 @@ for file in files:
         gender_features_x[i,1]=1
     y[i]=dic[file]
     i+=1
-
+#load age feature
 num_bins=4
 age_features_x=np.zeros((len(dic),num_bins))
 i=0
@@ -64,7 +64,7 @@ for file in files:
     if age:
         age_features_x[i,int((age-min_age)/(max_age-min_age+1)*num_bins)]=1
     i+=1
-
+#load location feature
 loc_features_x=np.zeros((len(dic),len(location)))
 i=0
 for file in files:
@@ -72,33 +72,33 @@ for file in files:
     if loc:
         loc_features_x[i,location[loc]]=1
     i+=1
-    
+#load gabor feature
 gabor_features_x=np.zeros((len(dic),48672))
 i=0
 for file in files:
     gabor_features_x[i]=np.load(gabor_feature_dir+'/'+file+'.npy')
     i+=1
-
+#load hog feature
 hog_features_x=np.zeros((len(dic),11664))
 i=0
 for file in files:
     hog_features_x[i]=np.load(hog_feature_dir+'/'+file+'.npy')
     i+=1 
-
+#load prewitt feature
 prewitt_features_x=np.zeros((len(dic),48672))
 i=0
 for file in files:
     prewitt_features_x[i]=np.load(prewitt_feature_dir+'/'+file+'.npy')
     i+=1
-
-gray_pexel_features_x=np.zeros((len(dic),24336))
+#load gray pixel feature
+gray_pixel_features_x=np.zeros((len(dic),24336))
 i=0
 for file in files:
-    gray_pexel_features_x[i]=np.load(gray_pexel_feature_dir+'/'+file+'.npy')
+    gray_pixel_features_x[i]=np.load(gray_pixel_feature_dir+'/'+file+'.npy')
     i+=1
     
 feature_ls=[age_features_x,loc_features_x,gray_pexel_features_x,hog_features_x,gender_features_x,prewitt_features_x,gabor_features_x,xrv_features_x]
-
+#implement filter method of feature selection based on fisher score as criteria, and plot 5-fold cross validation accuracy vs. number of features selected.
 feature_num=range(1,9)
 acc=[]
 start=time.time()
@@ -114,12 +114,11 @@ for i in range(1,9):
     acc.append(sum(result)/len(result))
 print(acc)
 print('takes time {} s'.format(time.time()-start))
-
 plt.plot(feature_num,acc)
 plt.xlabel('number of features')
 plt.ylabel('accuracy')
 plt.show()
-
+#implement wrapper method of feature selection, and plot 5-fold cross validation accuracy vs. number of features selected.
 accs=[]
 feature_selected=[]
 start=time.time()
@@ -153,7 +152,6 @@ for i in range(1,9):
 print(feature_selected)
 print(accs)
 print('takes time {} s'.format(time.time()-start))
-
 plt.plot(feature_num,accs)
 plt.xlabel('number of features')
 plt.ylabel('accuracy')
