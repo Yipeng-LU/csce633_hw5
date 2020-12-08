@@ -4,6 +4,7 @@ import os
 train_dir='Homework5/train'
 test_dir='Homework5/test'
 dirs=[train_dir,test_dir]
+#crop the x-ray images to square shape, and resize to a fixed size
 min_width=float('inf')
 min_height=float('inf')
 for dir in dirs:
