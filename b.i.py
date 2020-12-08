@@ -6,6 +6,7 @@ import cv2
 from skimage.feature import hog
 features_dir='hw5/features'
 processed_dir='hw5/processed'
+#extract gabor feature
 gabor_feature_dir=features_dir+'/'+'gabor'
 if not os.path.exists(gabor_feature_dir):
     os.makedirs(gabor_feature_dir)
@@ -14,7 +15,7 @@ for file in os.listdir(processed_dir):
     filt_real, filt_imag = gabor(image, frequency=0.6)
     feature=np.concatenate((filt_real.flatten(),filt_imag.flatten()),axis=0)
     np.save(gabor_feature_dir+'/'+file,feature)
-    
+#extract prewitt feature
 prewitt_feature_dir=features_dir+'/'+'prewitt'
 if not os.path.exists(prewitt_feature_dir):
     os.makedirs(prewitt_feature_dir)
@@ -24,15 +25,15 @@ for file in os.listdir(processed_dir):
     edges_prewitt_vertical = prewitt_v(image)
     feature=np.concatenate((edges_prewitt_horizontal.flatten(),edges_prewitt_vertical.flatten()),axis=0)
     np.save(prewitt_feature_dir+'/'+file,feature)
-
-gray_pexel_feature_dir=features_dir+'/'+'gray'
-if not os.path.exists(gray_pexel_feature_dir):
-    os.makedirs(gray_pexel_feature_dir)
+#extract gray pixel feature
+gray_pixel_feature_dir=features_dir+'/'+'gray'
+if not os.path.exists(gray_pixel_feature_dir):
+    os.makedirs(gray_pixel_feature_dir)
 for file in os.listdir(processed_dir):
     image=cv2.cvtColor(np.load(processed_dir+'/'+file), cv2.COLOR_BGR2GRAY)
     feature=image.flatten()
-    np.save(gray_pexel_feature_dir+'/'+file,feature)
-
+    np.save(gray_pixel_feature_dir+'/'+file,feature)
+#extract hog feature
 hog_feature_dir=features_dir+'/'+'hog'
 if not os.path.exists(hog_feature_dir):
     os.makedirs(hog_feature_dir)
@@ -40,8 +41,7 @@ for file in os.listdir(processed_dir):
     image=cv2.cvtColor(np.load(processed_dir+'/'+file), cv2.COLOR_BGR2GRAY)
     feature= hog(image, orientations=9, pixels_per_cell=(8, 8),cells_per_block=(2, 2))
     np.save(hog_feature_dir+'/'+file,feature)
-
-!pip install torchxrayvision
+#extract probability vectors outputed by pretrained xrv model
 import torchvision
 import torch.nn as nn
 import csv
