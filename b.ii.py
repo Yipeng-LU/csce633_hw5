@@ -10,7 +10,7 @@ features_dir='hw5/features'
 processed_dir='hw5/processed'
 gabor_feature_dir=features_dir+'/'+'gabor' 
 prewitt_feature_dir=features_dir+'/'+'prewitt'
-gray_pexel_feature_dir=features_dir+'/'+'gray'
+gray_pixel_feature_dir=features_dir+'/'+'gray'
 hog_feature_dir=features_dir+'/'+'hog'
 def dst(a,b):
     ret=0
@@ -64,7 +64,7 @@ with open('Homework5/train.csv') as csvfile:
         categ_feat[samp[0]]=(samp[1],age,loc)
 files=list(dic.keys())
 files.sort()
-
+#calculate gender feature using one-hot encoding, and compute fisher score for feature selection
 gender_features_x=np.zeros((len(dic),2))
 gender_features_y=np.zeros((len(dic)))
 i=0
@@ -76,7 +76,7 @@ for file in files:
     gender_features_y[i]=dic[file]
     i+=1
 print(fisher(gender_features_x,gender_features_y))
-
+#calculate age feature using one-hot encoding, and compute fisher score for feature selection
 num_bins=4
 age_features_x=np.zeros((len(dic),num_bins))
 age_features_y=np.zeros((len(dic)))
@@ -88,7 +88,7 @@ for file in files:
     age_features_y[i]=dic[file]
     i+=1
 print(fisher(age_features_x,age_features_y))
-
+#calculate location feature using one-hot encoding, and compute fisher score for feature selection
 loc_features_x=np.zeros((len(dic),len(location)))
 loc_features_y=np.zeros((len(dic)))
 i=0
@@ -99,7 +99,7 @@ for file in files:
     loc_features_y[i]=dic[file]
     i+=1
 print(fisher(loc_features_x,loc_features_y))
-
+#compute fisher score of gabor feature for feature selection
 gabor_features_x=np.zeros((len(dic),48672))
 gabor_features_y=np.zeros((len(dic)))
 i=0
@@ -108,7 +108,7 @@ for file in files:
     gabor_features_y[i]=dic[file]
     i+=1
 print(fisher(gabor_features_x,gabor_features_y))
-
+#compute fisher score of hog feature for feature selection
 hog_features_x=np.zeros((len(dic),11664))
 hog_features_y=np.zeros((len(dic)))
 i=0
@@ -117,7 +117,7 @@ for file in files:
     hog_features_y[i]=dic[file]
     i+=1
 print(fisher(hog_features_x,hog_features_y))  
-
+#compute fisher score of prewitt feature for feature selection
 prewitt_features_x=np.zeros((len(dic),48672))
 prewitt_features_y=np.zeros((len(dic)))
 i=0
@@ -126,15 +126,15 @@ for file in files:
     prewitt_features_y[i]=dic[file]
     i+=1
 print(fisher(prewitt_features_x,prewitt_features_y)) 
-
-gray_pexel_features_x=np.zeros((len(dic),24336))
-gray_pexel_features_y=np.zeros((len(dic)))
+#compute fisher score of gray pixel feature for feature selection
+gray_pixel_features_x=np.zeros((len(dic),24336))
+gray_pixel_features_y=np.zeros((len(dic)))
 i=0
 for file in files:
-    gray_pexel_features_x[i]=np.load(gray_pexel_feature_dir+'/'+file+'.npy')
-    gray_pexel_features_y[i]=dic[file]
+    gray_pixel_features_x[i]=np.load(gray_pixel_feature_dir+'/'+file+'.npy')
+    gray_pixel_features_y[i]=dic[file]
     i+=1
-print(fisher(gray_pexel_features_x,gray_pexel_features_y)) 
+print(fisher(gray_pixel_features_x,gray_pixel_features_y)) 
 
 genders=[]
 ages=[]
@@ -168,6 +168,7 @@ with open('Homework5/train.csv') as csvfile:
             labels.append('Unknown')
 from collections import Counter
 gender_count=Counter(genders)
+#plot histogram of gender feature
 plt.bar(gender_count.keys(),gender_count.values())
 plt.title('gender distribution')
 plt.show()
@@ -177,10 +178,12 @@ age_keys.sort()
 age_values=[]
 for key in age_keys:
     age_values.append(age_count[key])
+#plot histogram of age feature
 plt.bar(age_keys,age_values)
 plt.title('age distribution')
 plt.show()
 label_count=Counter(labels)
+#plot histogram of label
 plt.bar(label_count.keys(),label_count.values())
 plt.title('label distribution')
 plt.show()
