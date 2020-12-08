@@ -16,7 +16,7 @@ features_dir='hw5/features'
 processed_dir='hw5/processed'
 gabor_feature_dir=features_dir+'/'+'gabor' 
 prewitt_feature_dir=features_dir+'/'+'prewitt'
-gray_pexel_feature_dir=features_dir+'/'+'gray'
+gray_pixel_feature_dir=features_dir+'/'+'gray'
 hog_feature_dir=features_dir+'/'+'hog'
 dic={}
 categ_feat={}
@@ -90,10 +90,10 @@ for file in files:
     prewitt_features_x[i]=np.load(prewitt_feature_dir+'/'+file+'.npy')
     i+=1
 
-gray_pexel_features_x=np.zeros((len(dic),24336))
+gray_pixel_features_x=np.zeros((len(dic),24336))
 i=0
 for file in files:
-    gray_pexel_features_x[i]=np.load(gray_pexel_feature_dir+'/'+file+'.npy')
+    gray_pixel_features_x[i]=np.load(gray_pixel_feature_dir+'/'+file+'.npy')
     i+=1
 
 xrv_features_x=np.load('/content/drive/My Drive/xrv_feature.npy')
@@ -106,6 +106,7 @@ for i in range(1,9):
     else:
         x=np.concatenate((x,feature_ls[i-1]),axis=1)
 start=time.time()
+#implement adaboost classifier on all features
 result=cross_validate(AdaBoostClassifier(),x,y,cv=5)['test_score']
 print(sum(result)/len(result))
 print('takes time {} s'.format(time.time()-start))
