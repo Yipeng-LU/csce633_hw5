@@ -47,6 +47,7 @@ for file in files:
 x=np.array(x)
 model=create_model_cnn()
 model.load_weights('/content/drive/My Drive/hw5_model1.h5')
+#method 1 predict labels of test set using fine tuned vgg16
 y_vgg16=model.predict(x)
 vgg16_predictions={}
 for i in range(len(files)):
@@ -106,6 +107,7 @@ for file in files:
     elif loc and (loc not in location):
         not_exist_loc.add(file)
     i+=1
+#method 2 predict labels of test set using location feature only. If location in test samples not exist in train set, use VGG16 instead
 y_loc=clf.predict(loc_features_x)
 loc_predictions={}
 for i in range(len(files)):
@@ -114,6 +116,7 @@ for i in range(len(files)):
     if file not in not_exist_loc:
         loc_predictions[file]=prediction
 import csv
+#write predictions of method 1 and method 2 to csv file
 with open('hw5_predictions.csv', 'w', newline='') as csvfile:
     prediction_writer = csv.writer(csvfile,delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     for file in files:
